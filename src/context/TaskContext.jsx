@@ -16,17 +16,8 @@ export const TaskProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
   const [lastLevel, setLastLevel] = useState(1);
   const [levelUpData, setLevelUpData] = useState(null);
+  
   const currentDayNumber = useMemo(() => getCurrentDayNumber(), []);
-
-  // Monitor Level Up
-  useEffect(() => {
-    if (!member) return;
-    const { level } = getMemberAchievements(member.id);
-    if (level > lastLevel) {
-      setLevelUpData({ level });
-      setLastLevel(level);
-    }
-  }, [taskStates, member, lastLevel, getMemberAchievements]);
 
   // Load persisted task states from localStorage
   useEffect(() => {
@@ -35,19 +26,10 @@ export const TaskProvider = ({ children }) => {
       if (saved) {
         const states = JSON.parse(saved);
         setTaskStates(states);
-        
-        // Initialize lastLevel from calculation
-        // Need a simple level calculator here
       }
     } catch (e) {
       console.error('Failed to load task states:', e);
     }
-  }, []);
-
-  // Persist task states
-  const persistStates = useCallback((newStates) => {
-    setTaskStates(newStates);
-    localStorage.setItem('ks_task_states', JSON.stringify(newStates));
   }, []);
 
   // Show a toast notification
@@ -210,6 +192,16 @@ export const TaskProvider = ({ children }) => {
 
     return { achievements, xp, level, nextLevelXp, currentLevelProgress };
   }, [getMemberStats, getStreak]);
+
+  // Monitor Level Up (Must be after getMemberAchievements)
+  useEffect(() => {
+    if (!member) return;
+    const { level } = getMemberAchievements(member.id);
+    if (level > lastLevel) {
+      setLevelUpData({ level });
+      setLastLevel(level);
+    }
+  }, [taskStates, member, lastLevel, getMemberAchievements]);
 
   // Bulk complete for a week
   const completeWeekTasks = useCallback((weekNumber, memberId) => {
