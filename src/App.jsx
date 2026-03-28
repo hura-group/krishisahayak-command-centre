@@ -28,7 +28,7 @@ const LevelUpAnimation = lazy(() => import('./components/LevelUpAnimation'));
 // Loader component for suspense
 const PageLoader = () => (
   <div className="flex-1 flex flex-col items-center justify-center p-12">
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="flex flex-col items-center gap-6"
@@ -40,7 +40,7 @@ const PageLoader = () => (
 );
 
 function AppContent() {
-  const { 
+  const {
     member, logout,
     isConfirmingLogout, setIsConfirmingLogout,
     isLoggingOut, setIsLoggingOut
@@ -70,7 +70,7 @@ function AppContent() {
       <div className="hud-vignette" />
       <div className="hud-noise" />
       <div className="hud-scanline-beam" />
-      
+
       {/* 3D Backdrop (Condition: Logged In & No Prank Active) */}
       <Suspense fallback={null}>
         {member && !isLoggingOut && !isConfirmingLogout && <SplineBackground />}
@@ -80,33 +80,33 @@ function AppContent() {
       <AnimatePresence mode="wait">
         {isConfirmingLogout && (
           <Suspense fallback={null}>
-            <LogoutConfirmation 
+            <LogoutConfirmation
               key="logout-confirm"
               onConfirm={() => {
                 setIsConfirmingLogout(false);
                 setIsLoggingOut(true);
-              }} 
-              onCancel={() => setIsConfirmingLogout(false)} 
+              }}
+              onCancel={() => setIsConfirmingLogout(false)}
             />
           </Suspense>
         )}
-        
+
         {isLoggingOut && (
           <Suspense fallback={null}>
-            <HackedAnimation 
+            <HackedAnimation
               key="logout-hacked"
               mode="logout"
-              onComplete={logout} 
+              onComplete={logout}
             />
           </Suspense>
         )}
 
         {levelUpData && (
           <Suspense fallback={null}>
-            <LevelUpAnimation 
+            <LevelUpAnimation
               key="level-up"
               level={levelUpData.level}
-              onComplete={() => setLevelUpData(null)} 
+              onComplete={() => setLevelUpData(null)}
             />
           </Suspense>
         )}
@@ -114,7 +114,7 @@ function AppContent() {
 
       <div className="content-overlay flex-1 flex flex-col relative z-20">
         {member && <Header />}
-        
+
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
           <Suspense fallback={<PageLoader />}>
             <Routes>

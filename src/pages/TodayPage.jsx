@@ -106,7 +106,7 @@ export default function TodayPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
              {[
                { label: 'STATUS', val: task.status.toUpperCase(), c: 'text-emerald-500' },
-               { label: 'SECTOR', val: 'ALPHA-7', c: 'text-white/40' },
+               { label: 'SECTOR', val: 'SENTINEL-1', c: 'text-white/40' },
                { label: 'WEEK', val: currentWeekNumber, c: 'text-white/40' },
                { label: 'TYPE', val: task.category.toUpperCase(), c: 'ks-gold-text' },
              ].map((m, i) => (

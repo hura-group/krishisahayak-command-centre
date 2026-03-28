@@ -52,7 +52,7 @@ function IntelTicker() {
 
     const gamification = getMemberAchievements(member.id);
     if (gamification.level > 1) {
-      base.push(`NODE_ALPHA: LEVEL_${gamification.level}_VERIFIED`);
+      base.push(`NODE_SENTINEL: LEVEL_${gamification.level}_VERIFIED`);
     }
 
     return [...base, ...recentCompletions];
@@ -104,7 +104,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">System Node: Alpha-7</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">System Node: Sentinel-1</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black font-outfit tracking-tighter text-white mb-2 leading-tight uppercase">
               Command <br/> Centre

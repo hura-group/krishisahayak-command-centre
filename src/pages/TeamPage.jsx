@@ -100,7 +100,7 @@ export default function TeamPage() {
               Crew <br/> Manifest
            </h1>
            <p className="text-xs font-medium opacity-40 mt-6 max-w-sm leading-relaxed tracking-wide">
-             Real-time synchronization for <span className="ks-gold-text">Delta-Class</span> operational nodes across global sectors.
+             Real-time synchronization for <span className="ks-gold-text">Sentinel-Class</span> operational nodes across global sectors.
            </p>
         </div>
         
