@@ -8,6 +8,10 @@ import MobileNav from './components/MobileNav';
 import ToastContainer from './components/ToastContainer';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTasks } from './context/TaskContext';
+import MaintenancePage from './pages/MaintenancePage';
+
+// Toggle this to TRUE to show the maintenance screen
+const IS_MAINTENANCE = true;
 
 // Lazy load components
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -54,6 +58,11 @@ function AppContent() {
     document.addEventListener('mouseleave', handleMouseLeave);
     return () => document.removeEventListener('mouseleave', handleMouseLeave);
   }, [member, isConfirmingLogout, isLoggingOut, setIsConfirmingLogout]);
+
+  // Maintenance Mode Override
+  if (IS_MAINTENANCE) {
+    return <MaintenancePage />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300 font-outfit relative">
