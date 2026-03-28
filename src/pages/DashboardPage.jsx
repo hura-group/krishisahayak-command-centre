@@ -80,7 +80,17 @@ function IntelTicker() {
 
 export default function DashboardPage() {
   const { member } = useAuth();
-  const { currentDayNumber, currentDayData, currentWeekNumber, WEEK_THEMES, updateTaskStatus, getMemberStats, getMemberAchievements } = useTasks();
+  const { 
+    currentDayNumber, 
+    currentDayData, 
+    currentWeekNumber, 
+    WEEK_THEMES, 
+    updateTaskStatus, 
+    getMemberStats, 
+    getMemberAchievements,
+    lastSync,
+    isSyncing 
+  } = useTasks();
   const [loading, setLoading] = React.useState(true);
   const [selectedAchievement, setSelectedAchievement] = React.useState(null);
 
@@ -123,11 +133,14 @@ export default function DashboardPage() {
               <div className="h-full bg-rose-500 shadow-[0_0_15px_rgba(251,113,133,0.5)] animate-pulse" style={{ width: `${progressPercent}%` }} />
               <div className="flex-1 bg-white/5" />
             </div>
-            <div className="flex items-center gap-4 opacity-20">
+            <div className="flex items-center justify-between opacity-20">
                <div className="flex gap-1">
                   {[1,2,3,4,5].map(i => <div key={i} className={`w-1 h-3 rounded-full ${i <= (progressPercent/20) ? 'bg-rose-500' : 'bg-white/20'}`} />)}
                </div>
-               <span className="text-[7px] font-black tracking-[0.3em]">MEMORY_RESERVE: OK</span>
+               <div className="flex flex-col items-end">
+                  <span className="text-[7px] font-black tracking-[0.3em] uppercase">Last Sync: {new Date(lastSync).toLocaleTimeString()}</span>
+                  <span className="text-[6px] font-bold tracking-[0.1em] opacity-50 uppercase">Sentinel_Link_Stable</span>
+               </div>
             </div>
           </div>
         </div>

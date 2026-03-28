@@ -14,8 +14,10 @@ export const TaskProvider = ({ children }) => {
   const { member } = useAuth();
   const [taskStates, setTaskStates] = useState({});
   const [toasts, setToasts] = useState([]);
-  const [lastLevel, setLastLevel] = useState(1);
-  const [levelUpData, setLevelUpData] = useState(null);
+   const [lastLevel, setLastLevel] = useState(1);
+   const [levelUpData, setLevelUpData] = useState(null);
+   const [lastSync, setLastSync] = useState(new Date().toISOString());
+   const [isSyncing, setIsSyncing] = useState(false);
   
   const currentDayNumber = useMemo(() => getCurrentDayNumber(), []);
 
@@ -37,6 +39,15 @@ export const TaskProvider = ({ children }) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
+  }, []);
+
+  // Simulated background sync
+  const performSync = useCallback(() => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      setLastSync(new Date().toISOString());
+      setIsSyncing(false);
+    }, 1500);
   }, []);
 
   // Update a task's status
@@ -238,11 +249,14 @@ export const TaskProvider = ({ children }) => {
       getMemberAchievements,
       completeWeekTasks,
       toasts,
-      showToast,
-      levelUpData,
-      setLevelUpData,
-      WEEK_THEMES,
-    }}>
+       showToast,
+       levelUpData,
+       setLevelUpData,
+       lastSync,
+       isSyncing,
+       performSync,
+       WEEK_THEMES,
+     }}>
       {children}
     </TaskContext.Provider>
   );
