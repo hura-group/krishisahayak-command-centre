@@ -50,7 +50,7 @@ function MemberCard({ memberData, stats, isYou }) {
               <p className="text-xs font-black text-white font-outfit">{stats.completedTasks}<span className="opacity-20 ml-1">/ {stats.totalTasks}</span></p>
             </div>
             <div className="p-3 bg-black/40">
-              <p className="text-[8px] font-black opacity-20 uppercase mb-1">Drift_Delta</p>
+              <p className="text-[8px] font-black opacity-20 uppercase mb-1">Drift_Sentinel</p>
               <p className="text-xs font-black text-white font-outfit">{stats.weekCompleted}<span className="opacity-20 ml-1">/ {stats.weekTasks}</span></p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function TeamPage() {
             <Cpu size={48} className="mx-auto mb-8 ks-gold-text opacity-20 group-hover:scale-110 transition-transform duration-1000" />
             <h3 className="text-xl font-black text-white font-outfit mb-3 uppercase tracking-tighter">Velocity_Dynamics Analyzer</h3>
             <p className="text-[10px] font-medium opacity-50 mx-auto max-w-xs tracking-widest leading-relaxed">
-               Predictive saturation models for Node {currentUser.id.slice(0,3)} are initializing in sector 4.
+               Predictive saturation models for Sentinel Node {member.id.slice(0,3)} are initializing in sector 4.
             </p>
          </div>
          <div className="span-1 ks-card border-dashed flex items-center justify-center opacity-10">

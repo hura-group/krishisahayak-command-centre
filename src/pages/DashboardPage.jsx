@@ -89,15 +89,19 @@ export default function DashboardPage() {
     getMemberStats, 
     getMemberAchievements,
     lastSync,
-    isSyncing 
+    isSyncing,
+    performSync 
   } = useTasks();
   const [loading, setLoading] = React.useState(true);
   const [selectedAchievement, setSelectedAchievement] = React.useState(null);
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
+    const timer = setTimeout(() => {
+      setLoading(false);
+      performSync(); // Trigger the background sync narrative
+    }, 800);
     return () => clearTimeout(timer);
-  }, []);
+  }, [performSync]);
 
   const stats = useMemo(() => getMemberStats(member.id), [getMemberStats, member.id]);
   const gamification = useMemo(() => getMemberAchievements(member.id), [getMemberAchievements, member.id]);
@@ -137,7 +141,7 @@ export default function DashboardPage() {
                <div className="flex gap-1">
                   {[1,2,3,4,5].map(i => <div key={i} className={`w-1 h-3 rounded-full ${i <= (progressPercent/20) ? 'bg-rose-500' : 'bg-white/20'}`} />)}
                </div>
-               <div className="flex flex-col items-end">
+               <div className="flex flex-col items-end text-right">
                   <span className="text-[7px] font-black tracking-[0.3em] uppercase">Last Sync: {new Date(lastSync).toLocaleTimeString()}</span>
                   <span className="text-[6px] font-bold tracking-[0.1em] opacity-50 uppercase">Sentinel_Link_Stable</span>
                </div>
