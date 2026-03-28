@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useAuth } from './AuthContext';
 import { SCHEDULE_DATA, getCurrentDayNumber, WEEK_THEMES } from '../data/scheduleData';
 
 const TaskContext = createContext(null);
@@ -10,15 +11,34 @@ export const useTasks = () => {
 };
 
 export const TaskProvider = ({ children }) => {
+  const { member } = useAuth();
   const [taskStates, setTaskStates] = useState({});
   const [toasts, setToasts] = useState([]);
+  const [lastLevel, setLastLevel] = useState(1);
+  const [levelUpData, setLevelUpData] = useState(null);
   const currentDayNumber = useMemo(() => getCurrentDayNumber(), []);
+
+  // Monitor Level Up
+  useEffect(() => {
+    if (!member) return;
+    const { level } = getMemberAchievements(member.id);
+    if (level > lastLevel) {
+      setLevelUpData({ level });
+      setLastLevel(level);
+    }
+  }, [taskStates, member, lastLevel, getMemberAchievements]);
 
   // Load persisted task states from localStorage
   useEffect(() => {
     try {
       const saved = localStorage.getItem('ks_task_states');
-      if (saved) setTaskStates(JSON.parse(saved));
+      if (saved) {
+        const states = JSON.parse(saved);
+        setTaskStates(states);
+        
+        // Initialize lastLevel from calculation
+        // Need a simple level calculator here
+      }
     } catch (e) {
       console.error('Failed to load task states:', e);
     }
@@ -227,6 +247,8 @@ export const TaskProvider = ({ children }) => {
       completeWeekTasks,
       toasts,
       showToast,
+      levelUpData,
+      setLevelUpData,
       WEEK_THEMES,
     }}>
       {children}

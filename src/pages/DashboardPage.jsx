@@ -5,6 +5,7 @@ import { useTasks } from '../context/TaskContext';
 import { Calendar, TrendingUp, Clock, ShieldCheck, Zap, Target, Activity, Coffee, Radio, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ThreeDCard from '../components/ThreeDCard';
+import AchievementModal from '../components/AchievementModal';
 
 function StatusBadge({ status, onChange }) {
   const configs = {
@@ -28,16 +29,34 @@ function StatusBadge({ status, onChange }) {
 }
 
 function IntelTicker() {
-  const updates = [
-    "PROTOCOL_ALPHA_7: ONLINE",
-    "NORTHERN_SQUADRON: MISSION_SUCCESS",
-    "SEED_SOWER: LEVEL_UP_AVAILABLE",
-    "ENCRYPTION_KEY: ROTATED",
-    "HARVEST_PREDICTION: +12% YIELD",
-    "COMMAND_CENTRAL: ALL_SYSTEMS_OPERATIONAL",
-    "WARNING: UNIDENTIFIED_LOGIN_ATTEMPT_STIFLED",
-    "INTEL: NEW_ROADMAP_ASSETS_DETECTED"
-  ];
+  const { fullSchedule, getMemberStats, getMemberAchievements } = useTasks();
+  const { member } = useAuth();
+  
+  const updates = useMemo(() => {
+    const base = [
+      "COMMAND_CENTRAL: ALL_SYSTEMS_OPERATIONAL",
+      "ENCRYPTION_KEY: ROTATED",
+      "SECURE_NODE: ACTIVE",
+      `OPERATIONAL_STATUS: DAY_${fullSchedule.filter(d => d.tasks[member.id]?.status === 'completed').length + 1}_READY`
+    ];
+
+    // Get some real activity from the schedule
+    const recentCompletions = [];
+    fullSchedule.forEach(day => {
+      Object.entries(day.tasks).forEach(([mid, task]) => {
+        if (task.status === 'completed' && recentCompletions.length < 5) {
+          recentCompletions.push(`${mid.toUpperCase()}: MISSION_${task.id.slice(-4).toUpperCase()}_SUCCESS`);
+        }
+      });
+    });
+
+    const gamification = getMemberAchievements(member.id);
+    if (gamification.level > 1) {
+      base.push(`NODE_ALPHA: LEVEL_${gamification.level}_VERIFIED`);
+    }
+
+    return [...base, ...recentCompletions];
+  }, [fullSchedule, member.id, getMemberAchievements]);
 
   return (
     <div className="w-full bg-rose-500/5 border-y border-white/5 py-2 overflow-hidden mb-8 relative">
@@ -45,12 +64,12 @@ function IntelTicker() {
        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-bg-primary to-transparent z-10" />
        <motion.div 
           animate={{ x: [0, -1000] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
           className="flex whitespace-nowrap gap-12"
        >
-          {[...updates, ...updates].map((text, i) => (
+          {[...updates, ...updates, ...updates].map((text, i) => (
              <div key={i} className="flex items-center gap-3">
-                <Radio size={10} className="text-rose-500/50" />
+                <Radio size={10} className="ks-gold-text opacity-50" />
                 <span className="text-[10px] font-black text-rose-500/40 tracking-[0.2em] font-mono">{text}</span>
              </div>
           ))}
@@ -63,6 +82,7 @@ export default function DashboardPage() {
   const { member } = useAuth();
   const { currentDayNumber, currentDayData, currentWeekNumber, WEEK_THEMES, updateTaskStatus, getMemberStats, getMemberAchievements } = useTasks();
   const [loading, setLoading] = React.useState(true);
+  const [selectedAchievement, setSelectedAchievement] = React.useState(null);
 
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -99,8 +119,15 @@ export default function DashboardPage() {
               <span>Mission Readiness</span>
               <span className="ks-gold-text">{progressPercent}%</span>
             </div>
-            <div className="w-full h-1.5 rounded-full bg-black/40 border border-white/5 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[var(--color-accent-dark)] to-[var(--color-accent)] animate-pulse" style={{ width: `${progressPercent}%` }} />
+            <div className="w-full h-1.5 rounded-full bg-black/40 border border-white/5 overflow-hidden flex">
+              <div className="h-full bg-rose-500 shadow-[0_0_15px_rgba(251,113,133,0.5)] animate-pulse" style={{ width: `${progressPercent}%` }} />
+              <div className="flex-1 bg-white/5" />
+            </div>
+            <div className="flex items-center gap-4 opacity-20">
+               <div className="flex gap-1">
+                  {[1,2,3,4,5].map(i => <div key={i} className={`w-1 h-3 rounded-full ${i <= (progressPercent/20) ? 'bg-rose-500' : 'bg-white/20'}`} />)}
+               </div>
+               <span className="text-[7px] font-black tracking-[0.3em]">MEMORY_RESERVE: OK</span>
             </div>
           </div>
         </div>
@@ -171,7 +198,11 @@ export default function DashboardPage() {
       content: (
         <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
           {gamification.achievements.length > 0 ? gamification.achievements.map(ach => (
-            <div key={ach.id} className="flex-shrink-0 flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5 group hover:border-rose-500/20 transition-all">
+            <div 
+              key={ach.id} 
+              onClick={() => setSelectedAchievement(ach)}
+              className="flex-shrink-0 flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5 group hover:border-rose-500/20 transition-all cursor-pointer active:scale-95"
+            >
               <span className="text-xl group-hover:scale-125 transition-transform">{ach.icon}</span>
               <div className="min-w-0">
                 <p className="text-[10px] font-black text-white truncate uppercase tracking-tighter">{ach.title}</p>
@@ -241,6 +272,15 @@ export default function DashboardPage() {
           ))}
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {selectedAchievement && (
+          <AchievementModal 
+            achievement={selectedAchievement} 
+            onClose={() => setSelectedAchievement(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

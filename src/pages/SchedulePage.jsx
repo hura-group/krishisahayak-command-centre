@@ -50,10 +50,14 @@ export default function SchedulePage() {
 
         <div className="text-center">
            <div className="flex items-center justify-center gap-2 mb-2">
-              <Activity size={12} className="ks-gold-text animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.5em] opacity-40">Operational Roadmap</span>
+              <Activity size={12} className={activeWeek > 8 ? "text-rose-500 animate-pulse" : "ks-gold-text animate-pulse"} />
+              <span className="text-[10px] font-black uppercase tracking-[0.5em] opacity-40">
+                {activeWeek > 8 ? "Phase II: Scalability" : "Phase I: Foundation"}
+              </span>
            </div>
-           <h2 className="text-4xl font-black text-white font-outfit uppercase tracking-tighter">PHASE {activeWeek.toString().padStart(2, '0')}</h2>
+           <h2 className="text-4xl font-black text-white font-outfit uppercase tracking-tighter italic">
+              WEEK {activeWeek.toString().padStart(2, '0')}
+           </h2>
            <p className="text-[10px] font-black ks-gold-text mt-2 uppercase tracking-[0.3em]">{WEEK_THEMES[activeWeek - 1]}</p>
         </div>
 

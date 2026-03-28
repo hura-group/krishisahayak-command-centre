@@ -51,7 +51,7 @@ export const MEMBERS = {
   },
 };
 
-export const MEMBERS_ARRAY = Object.values(MEMBERS);
+export const MEMBERS_ARRAY = [MEMBERS.kartik, MEMBERS.umang, MEMBERS.harsh];
 
 export const getMember = (username) => MEMBERS[username] || null;
 

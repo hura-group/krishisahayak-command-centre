@@ -15,7 +15,9 @@ import TeamPage from './pages/TeamPage';
 import HackedAnimation from './components/HackedAnimation';
 import LogoutConfirmation from './components/LogoutConfirmation';
 import SplineBackground from './components/SplineBackground';
+import LevelUpAnimation from './components/LevelUpAnimation';
 import { AnimatePresence } from 'framer-motion';
+import { useTasks } from './context/TaskContext';
 
 function AppContent() {
   const { 
@@ -23,6 +25,7 @@ function AppContent() {
     isConfirmingLogout, setIsConfirmingLogout,
     isLoggingOut, setIsLoggingOut
   } = useAuth();
+  const { levelUpData, setLevelUpData } = useTasks();
 
   // Exit Intent Listener
   useEffect(() => {
@@ -38,8 +41,10 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300 font-outfit relative">
-      <div className="hud-scanlines pointer-events-none" />
-      <div className="noise-overlay pointer-events-none" />
+      {/* HUD Overlays */}
+      <div className="hud-vignette" />
+      <div className="hud-noise" />
+      <div className="hud-scanline-beam" />
       
       {/* 3D Backdrop (Condition: Logged In & No Prank Active) */}
       {member && !isLoggingOut && !isConfirmingLogout && <SplineBackground />}
@@ -62,6 +67,14 @@ function AppContent() {
             key="logout-hacked"
             mode="logout"
             onComplete={logout} 
+          />
+        )}
+
+        {levelUpData && (
+          <LevelUpAnimation 
+            key="level-up"
+            level={levelUpData.level}
+            onComplete={() => setLevelUpData(null)} 
           />
         )}
       </AnimatePresence>
