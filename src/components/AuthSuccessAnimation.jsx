@@ -1,13 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AuthSuccessAnimation({ onComplete, isLogout = false }) {
-  // Use a slightly longer timeout for for the zoom effect if in logout mode
+  // Use a slightly longer timeout for the zoom effect if in logout mode (or login zoom)
   const duration = isLogout ? 4500 : 3500;
+  const [showFlash, setShowFlash] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(onComplete, duration);
-    return () => clearTimeout(timer);
+    // Trigger flash right before completion
+    const flashTimer = setTimeout(() => setShowFlash(true), duration - 800);
+    const completeTimer = setTimeout(onComplete, duration);
+    
+    return () => {
+      clearTimeout(flashTimer);
+      clearTimeout(completeTimer);
+    };
   }, [onComplete, duration]);
 
   return (
@@ -17,53 +24,66 @@ export default function AuthSuccessAnimation({ onComplete, isLogout = false }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      {/* Final Flash Portal */}
+      <AnimatePresence>
+        {showFlash && (
+          <motion.div 
+            key="flash"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[13000] bg-white pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
+
       <div className="relative flex items-center justify-center w-full h-full">
         {/* Glow Explosion */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: [0, 1.5, 3], opacity: [0, 0.4, 0] }}
-          transition={{ delay: 1, duration: 2 }}
-          className="absolute w-64 h-64 bg-rose-500 rounded-full blur-[100px]"
+          animate={{ scale: [0, 1.5, 4], opacity: [0, 0.4, 0] }}
+          transition={{ delay: 1, duration: 2.5, ease: "easeOut" }}
+          className="absolute w-64 h-64 bg-rose-500 rounded-full blur-[120px]"
         />
 
         {/* Boy from left */}
         <motion.div
-          initial={{ x: -250, opacity: 0 }}
-          animate={{ x: -30, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "circOut" }}
-          className="text-7xl md:text-9xl z-10"
+          initial={{ x: -250, opacity: 0, scale: 0.8 }}
+          animate={{ x: -40, opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "circOut" }}
+          className="text-7xl md:text-9xl z-10 filter drop-shadow-[0_0_20px_rgba(225,29,72,0.3)]"
         >
           👦
         </motion.div>
 
         {/* Girl from right */}
         <motion.div
-          initial={{ x: 250, opacity: 0 }}
-          animate={{ x: 30, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "circOut" }}
-          className="text-7xl md:text-9xl z-10"
+          initial={{ x: 250, opacity: 0, scale: 0.8 }}
+          animate={{ x: 40, opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "circOut" }}
+          className="text-7xl md:text-9xl z-10 filter drop-shadow-[0_0_20px_rgba(225,29,72,0.3)]"
         >
           👧
         </motion.div>
 
-        {/* Heart Pop & Zoom (Condition: isLogout) */}
+        {/* Heart Pop & cinematic Zoom */}
         {isLogout ? (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ 
-              scale: [0, 2, 1.5, 100], 
+              scale: [0, 2.5, 2, 120], 
               opacity: [0, 1, 1, 1],
-              rotate: [0, 15, -15, 0]
+              rotate: [0, 25, -25, 0]
             }}
             transition={{ 
               delay: 1.5, 
-              duration: 2.5, 
+              duration: 2.8, 
               times: [0, 0.2, 0.4, 1],
-              ease: "easeInOut" 
+              ease: [0.4, 0, 0.2, 1] 
             }}
             className="absolute z-[12000] flex items-center justify-center pointer-events-none"
           >
-            <svg viewBox="0 0 24 24" className="w-16 h-16 md:w-24 md:h-24 fill-rose-600">
+            <svg viewBox="0 0 24 24" className="w-16 h-16 md:w-24 md:h-24 fill-rose-600 filter drop-shadow-[0_0_30px_rgba(225,29,72,0.5)]">
                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </motion.div>
@@ -87,7 +107,7 @@ export default function AuthSuccessAnimation({ onComplete, isLogout = false }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.8 }}
+            transition={{ delay: 2.2, duration: 0.8 }}
             className="absolute bottom-24 flex flex-col items-center gap-2"
           >
             <div className="text-3xl md:text-4xl font-black text-rose-300 tracking-tighter uppercase text-center font-outfit">
@@ -110,6 +130,9 @@ export default function AuthSuccessAnimation({ onComplete, isLogout = false }) {
           </motion.div>
         )}
       </div>
+
+      {/* Grid Overlay for extra Command Centre feel */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
     </motion.div>
   );
 }

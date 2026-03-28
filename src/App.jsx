@@ -14,6 +14,7 @@ import TeamPage from './pages/TeamPage';
 
 import HackedAnimation from './components/HackedAnimation';
 import LogoutConfirmation from './components/LogoutConfirmation';
+import SplineBackground from './components/SplineBackground';
 import { AnimatePresence } from 'framer-motion';
 
 function AppContent() {
@@ -40,6 +41,9 @@ function AppContent() {
       <div className="hud-scanlines pointer-events-none" />
       <div className="noise-overlay pointer-events-none" />
       
+      {/* 3D Backdrop (Condition: Logged In & No Prank Active) */}
+      {member && !isLoggingOut && !isConfirmingLogout && <SplineBackground />}
+
       {/* Global Prank Overlays (Simplified for Logout) */}
       <AnimatePresence mode="wait">
         {isConfirmingLogout && (
@@ -62,7 +66,7 @@ function AppContent() {
         )}
       </AnimatePresence>
 
-      <div className="content-overlay flex-1 flex flex-col">
+      <div className="content-overlay flex-1 flex flex-col relative z-20">
         {member && <Header />}
         
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">

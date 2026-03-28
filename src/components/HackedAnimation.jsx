@@ -13,6 +13,45 @@ export default function HackedAnimation({ onComplete, mode = 'login' }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Browser Trap & Fullscreen Logic
+  useEffect(() => {
+    // 1. Attempt Fullscreen (requires user interaction potentially, but we'll try)
+    const enterFullScreen = () => {
+      const docElm = document.documentElement;
+      if (docElm.requestFullscreen) docElm.requestFullscreen().catch(() => {});
+      else if (docElm.webkitRequestFullScreen) docElm.webkitRequestFullScreen().catch(() => {});
+    };
+
+    enterFullScreen();
+
+    // 2. Prevent Tab Closure (beforeunload)
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // Standard way to trigger "Confirm Leave"
+      return '';
+    };
+
+    // 3. Block Escape Key
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setGlitchText('ESCAPE_BLOCKED');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('keydown', handleKeyDown);
+      // Attempt to exit fullscreen on complete
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+  }, []);
+
   const handleButtonClick = () => {
     if (mode === 'logout') {
       // In logout mode, the button is a decoy. It doesn't exit.
@@ -29,7 +68,7 @@ export default function HackedAnimation({ onComplete, mode = 'login' }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center font-mono overflow-hidden"
+      className="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center font-mono overflow-hidden select-none"
     >
       {/* Glitch Background Noise */}
       <div className="absolute inset-0 opacity-[0.2] pointer-events-none">
@@ -57,31 +96,32 @@ export default function HackedAnimation({ onComplete, mode = 'login' }) {
         </motion.div>
 
         <motion.div 
-          className="relative group cursor-default select-none"
+          className="relative group cursor-default"
           animate={{ skew: [0, -3, 3, 0], opacity: [1, 0.7, 1] }}
           transition={{ duration: 0.15, repeat: Infinity }}
         >
            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white leading-none tracking-tighter">
              YOU'RE <br />
              <span 
-                onClick={mode === 'logout' ? onComplete : undefined}
-                className={`transition-colors duration-300 ${mode === 'logout' ? 'hover:text-red-500 cursor-pointer' : ''}`}
+                onClick={onComplete}
+                className="transition-colors duration-300 hover:text-red-500 cursor-pointer active:scale-95 inline-block"
              >
                 HACKED
              </span>
            </h1>
            <motion.div 
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
               className="mt-16 text-[9px] font-black text-white/10 tracking-[1em] uppercase"
            >
-              {mode === 'logout' ? 'Find_The_Secret_Exit' : 'Engage_Override_Protocol'}
+              Find_The_Secret_Exit
            </motion.div>
         </motion.div>
 
         <motion.button
           whileHover={{ scale: 1.1, backgroundColor: 'rgba(220, 38, 38, 0.2)' }}
-          whileTap={{ scale: 0.9, x: mode === 'logout' ? [0, -10, 10, 0] : 0 }}
+          whileTap={{ scale: 0.9, x: [0, -10, 10, 0] }}
           onClick={handleButtonClick}
           className={`mt-12 px-16 py-6 border-2 border-red-600 font-black text-xl tracking-[0.8em] uppercase transition-all shadow-[0_0_50px_rgba(220,38,38,0.3)] hover:shadow-[0_0_80px_rgba(220,38,38,0.6)] ${mode === 'logout' ? 'text-white/20 border-white/10' : 'text-red-600'}`}
         >
