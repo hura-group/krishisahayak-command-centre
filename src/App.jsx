@@ -10,8 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTasks } from './context/TaskContext';
 import MaintenancePage from './pages/MaintenancePage';
 
-// Toggle this to TRUE to show the maintenance screen
-const IS_MAINTENANCE = true;
+const IS_MAINTENANCE = false;
 
 // Lazy load components
 const LoginPage = lazy(() => import('./pages/LoginPage'));
