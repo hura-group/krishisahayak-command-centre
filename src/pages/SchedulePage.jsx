@@ -13,7 +13,7 @@ function StatusSelect({ status, onChange }) {
   return (
     <select value={status} onChange={e => onChange(e.target.value)}
       className="px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest border border-white/5 outline-none cursor-pointer uppercase"
-      style={{ background: configs[status].bg, color: configs[status].c }}>
+      style={{ background: configs[status]?.bg || 'transparent', color: configs[status]?.c || 'white' }}>
       <option value="pending">⏳ {configs.pending.label}</option>
       <option value="inprogress">⚡ {configs.inprogress.label}</option>
       <option value="completed">✅ {configs.completed.label}</option>

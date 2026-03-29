@@ -16,7 +16,7 @@ function StatusBadge({ status, onChange }) {
       value={status}
       onChange={(e) => onChange(e.target.value)}
       className="px-4 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] border border-white/5 outline-none cursor-pointer uppercase transition-all bg-black/40"
-      style={{ color: configs[status].color }}
+      style={{ color: configs[status]?.color || 'white', background: configs[status]?.bg || 'transparent' }}
     >
       <option value="pending">⏳ {configs.pending.label}</option>
       <option value="inprogress">⚡ {configs.inprogress.label}</option>

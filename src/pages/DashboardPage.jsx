@@ -19,7 +19,10 @@ function StatusBadge({ status, onChange }) {
       value={status}
       onChange={(e) => onChange(e.target.value)}
       className="px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest border border-white/5 outline-none cursor-pointer uppercase transition-all hover:border-[var(--color-accent)]/30"
-      style={{ background: configs[status].bg, color: configs[status].color }}
+      style={{ 
+        background: configs[status]?.bg || 'transparent', 
+        color: configs[status]?.color || 'white' 
+      }}
     >
       <option value="pending">⏳ PENDING</option>
       <option value="inprogress">⚡ ACTIVE</option>
@@ -37,7 +40,7 @@ function IntelTicker() {
       "COMMAND_CENTRAL: ALL_SYSTEMS_OPERATIONAL",
       "ENCRYPTION_KEY: ROTATED",
       "SECURE_NODE: ACTIVE",
-      `OPERATIONAL_STATUS: DAY_${fullSchedule.filter(d => d.tasks[member.id]?.status === 'completed').length + 1}_READY`
+      `OPERATIONAL_STATUS: DAY_${fullSchedule.filter(d => d.tasks[member?.id]?.status === 'completed').length + 1}_READY`
     ];
 
     // Get some real activity from the schedule
@@ -50,7 +53,7 @@ function IntelTicker() {
       });
     });
 
-    const gamification = getMemberAchievements(member.id);
+    const gamification = member ? getMemberAchievements(member.id) : { level: 1 };
     if (gamification.level > 1) {
       base.push(`NODE_SENTINEL: LEVEL_${gamification.level}_VERIFIED`);
     }
@@ -102,8 +105,8 @@ export default function DashboardPage() {
     return () => clearTimeout(timer);
   }, [performSync]);
 
-  const stats = useMemo(() => getMemberStats(member.id), [getMemberStats, member.id]);
-  const gamification = useMemo(() => getMemberAchievements(member.id), [getMemberAchievements, member.id]);
+  const stats = useMemo(() => member ? getMemberStats(member.id) : { totalTasks: 0, completedTasks: 0 }, [getMemberStats, member]);
+  const gamification = useMemo(() => member ? getMemberAchievements(member.id) : { level: 1, achievements: [], xp: 0 }, [getMemberAchievements, member]);
   
   const progressPercent = stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0;
   const todayTask = currentDayData?.tasks[member.id];

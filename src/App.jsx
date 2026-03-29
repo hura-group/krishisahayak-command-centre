@@ -9,6 +9,7 @@ import ToastContainer from './components/ToastContainer';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTasks } from './context/TaskContext';
 import MaintenancePage from './pages/MaintenancePage';
+import PageTransition from './components/PageTransition';
 
 const IS_MAINTENANCE = false;
 
@@ -115,16 +116,18 @@ function AppContent() {
         {member && <Header />}
 
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-              <Route path="/schedule" element={<ProtectedRoute><SchedulePage /></ProtectedRoute>} />
-              <Route path="/today" element={<ProtectedRoute><TodayPage /></ProtectedRoute>} />
-              <Route path="/team" element={<ProtectedRoute><TeamPage /></ProtectedRoute>} />
-              <Route path="*" element={<Navigate to={member ? '/dashboard' : '/login'} replace />} />
-            </Routes>
-          </Suspense>
+          <PageTransition>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                <Route path="/schedule" element={<ProtectedRoute><SchedulePage /></ProtectedRoute>} />
+                <Route path="/today" element={<ProtectedRoute><TodayPage /></ProtectedRoute>} />
+                <Route path="/team" element={<ProtectedRoute><TeamPage /></ProtectedRoute>} />
+                <Route path="*" element={<Navigate to={member ? '/dashboard' : '/login'} replace />} />
+              </Routes>
+            </Suspense>
+          </PageTransition>
         </main>
 
         {member && <MobileNav />}
