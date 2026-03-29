@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Award, ShieldCheck, Target } from 'lucide-react';
 
 export default function AchievementModal({ achievement, onClose }) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Lock, User, Heart, ShieldCheck, ArrowRight, X } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import HeartParticles from '../components/HeartParticles';
 import AuthSuccessAnimation from '../components/AuthSuccessAnimation';
 import HeartEffect from '../components/HeartEffect';
