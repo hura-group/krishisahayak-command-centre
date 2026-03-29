@@ -109,7 +109,7 @@ export default function DashboardPage() {
   const gamification = useMemo(() => member ? getMemberAchievements(member.id) : { level: 1, achievements: [], xp: 0 }, [getMemberAchievements, member]);
   
   const progressPercent = stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0;
-  const todayTask = currentDayData?.tasks[member.id];
+  const todayTask = currentDayData?.tasks[member?.id];
 
   const bentoItems = [
     {
@@ -126,7 +126,7 @@ export default function DashboardPage() {
               Command <br/> Centre
             </h1>
             <p className="text-xs font-bold ks-gold-text tracking-widest uppercase opacity-80">
-              Phase {currentDayNumber} · {WEEK_THEMES[currentWeekNumber - 1]}
+              Phase {currentDayNumber} · {WEEK_THEMES[Math.max(0, (currentWeekNumber || 1) - 1)]}
             </p>
           </div>
           

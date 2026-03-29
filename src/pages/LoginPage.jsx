@@ -46,7 +46,8 @@ export default function LoginPage() {
     setTimeout(() => {
       const result = login(username.toLowerCase(), password);
       if (result.success) {
-        setAuthStage('hacked');
+        // Direct Home Page Opening (Skipping animations for better speed & password saving)
+        navigate('/dashboard');
       } else {
         setError(result.message);
         setIsLoading(false);
@@ -164,19 +165,12 @@ export default function LoginPage() {
                 {/* Premium Animated Backdrop elements */}
                 <motion.div 
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.15 }}
+                  animate={{ opacity: 0.1 }}
                   transition={{ duration: 3 }}
                   className="absolute inset-0 flex items-center justify-center -z-10"
                 >
-                   <div className="w-[80vw] h-[80vw] rounded-full border border-rose-500/10 blur-[120px]" />
+                   <div className="w-[80vw] h-[80vw] rounded-full border border-rose-500/5 blur-[120px]" />
                 </motion.div>
-                
-                {/* Steady Scanline Sweep */}
-                <motion.div 
-                  animate={{ y: ['-100%', '100%'] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 bg-gradient-to-b from-transparent via-rose-500/5 to-transparent h-40 w-full pointer-events-none z-0"
-                />
 
                 <div className="text-center space-y-16 max-w-4xl w-full translate-y-[-5%]">
                   <motion.div
@@ -184,85 +178,20 @@ export default function LoginPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <div className="flex items-center justify-center gap-6 mb-12">
-                       <div className="w-16 h-px bg-gradient-to-r from-transparent to-rose-500/40" />
-                       <span className="text-[10px] md:text-xs font-black ks-gold-text uppercase tracking-[1em] opacity-60">System Initializing</span>
-                       <div className="w-16 h-px bg-gradient-to-l from-transparent to-rose-500/40" />
-                    </div>
-                    
-                    <h1 className="text-7xl md:text-9xl font-black text-white leading-[0.85] tracking-tighter uppercase italic">
-                      Coming <br />
-                      <span className="rose-gold-gradient">Soon</span>
+                    <h1 className="text-7xl md:text-[10rem] font-black leading-none tracking-tighter uppercase italic drop-shadow-[0_0_40px_rgba(255,255,255,0.05)] flex items-center justify-center gap-8 group">
+                      <span className="bg-gradient-to-r from-rose-300 via-white to-rose-300 bg-clip-text text-transparent opacity-90 transition-all duration-700 group-hover:tracking-tight">Live</span>
+                      <span className="bg-gradient-to-r from-rose-400 via-white to-rose-400 bg-clip-text text-transparent opacity-90 transition-all duration-700 group-hover:tracking-tight">In</span>
                     </h1>
-                    
-                    <p className="text-[10px] md:text-sm font-black text-white/40 tracking-[0.5em] uppercase mt-12 italic">Arrival_Sequence: Operational</p>
                   </motion.div>
                   
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8, duration: 1, type: "spring" }}
-                    className="mx-auto flex justify-center scale-110 md:scale-125 py-6"
+                    className="mx-auto flex justify-center scale-110 md:scale-125 py-12"
                   >
                      <CountdownTimer targetDate={LAUNCH_DATE} onComplete={() => setIsComingSoon(false)} />
                   </motion.div>
-
-                  {/* Project Progress Timeline */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2 }}
-                    className="pt-12 w-full"
-                  >
-                    <div className="flex items-center justify-between mb-8 opacity-40">
-                       <span className="text-[10px] font-black uppercase tracking-[0.5em]">Roadmap_Progress</span>
-                       <span className="text-[10px] font-black uppercase tracking-[0.5em] rose-gold-gradient italic">Week 03 Active</span>
-                    </div>
-                    
-                    <div className="relative h-2 bg-white/5 rounded-full border border-white/10 flex items-center mb-10 overflow-visible">
-                       {/* Completed Progress Bar */}
-                       <div className="absolute left-0 top-0 bottom-0 bg-rose-600 rounded-full shadow-[0_0_20px_rgba(225,29,72,0.4)]" style={{ width: '15%' }} />
-                       
-                       {/* Timeline Nodes (Selected weeks) */}
-                       <div className="absolute inset-0 flex items-center justify-between px-2">
-                          {[1, 4, 8, 12, 16].map((week) => (
-                             <div key={week} className="relative group/node flex flex-col items-center">
-                                <div className={`w-3 h-3 rounded-full border-2 transition-all duration-500 ${week <= 2 ? 'bg-rose-500 border-rose-400' : 'bg-black border-white/20 group-hover/node:border-rose-500/50'}`} />
-                                <span className={`absolute -bottom-8 text-[8px] font-black uppercase tracking-widest whitespace-nowrap transition-colors ${week <= 2 ? 'text-rose-500' : 'text-white/10'}`}>W{week.toString().padStart(2, '0')}</span>
-                                
-                                {/* Tooltip on Hover */}
-                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover/node:opacity-100 transition-opacity bg-black/90 border border-white/10 px-3 py-1.5 rounded-lg backdrop-blur-3xl pointer-events-none z-50">
-                                   <p className="text-[7px] font-black text-rose-300 uppercase tracking-widest leading-none whitespace-nowrap">Node_Phase_{week}</p>
-                                </div>
-                             </div>
-                          ))}
-                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 mt-12">
-                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-left group hover:bg-white/[0.05] transition-all">
-                          <p className="text-[7px] font-black opacity-20 uppercase tracking-[0.3em] mb-1">Current Sector</p>
-                          <p className="text-[10px] font-black text-white uppercase tracking-wider group-hover:text-rose-400 transition-colors truncate">Auth & Security Node</p>
-                       </div>
-                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-right group hover:bg-white/[0.05] transition-all">
-                          <p className="text-[7px] font-black opacity-20 uppercase tracking-[0.3em] mb-1">System Health</p>
-                          <p className="text-[10px] font-black text-emerald-500 uppercase tracking-wider group-hover:scale-105 transition-all">Operational_100%</p>
-                       </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.8 }}
-                    className="pt-16 border-t border-white/5 inline-block mx-auto"
-                  >
-                    <p className="text-[9px] font-black text-rose-500/30 uppercase tracking-[0.8em] font-mono hover:opacity-100 transition-opacity cursor-default">ENCRYPTED_SIGNAL_STREAMING_BY_HURA_GROUP</p>
-                  </motion.div>
-                </div>
-
-                <div className="fixed bottom-12 opacity-10 hover:opacity-50 transition-opacity duration-1000 hidden md:block">
-                  <p className="text-[8px] font-black tracking-[1em] text-white uppercase italic">Access_Protocol: Restricted</p>
                 </div>
               </div>
             ) : (

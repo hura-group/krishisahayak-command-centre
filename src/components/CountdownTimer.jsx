@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const Digit = ({ value }) => (
+  <div className="relative inline-flex items-center justify-center w-[0.6em]">
+    <AnimatePresence mode="popLayout">
+      <motion.span
+        key={value}
+        initial={{ y: 10, opacity: 0, filter: 'blur(10px)' }}
+        animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+        exit={{ y: -10, opacity: 0, filter: 'blur(10px)' }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="block tabular-nums"
+      >
+        {value}
+      </motion.span>
+    </AnimatePresence>
+  </div>
+);
+
 const CountdownTimer = ({ targetDate, onComplete }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
@@ -37,38 +54,35 @@ const CountdownTimer = ({ targetDate, onComplete }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetDate]);
 
-  const TimeUnit = ({ value, label }) => (
-    <div className="flex flex-col items-center px-4 md:px-6">
-      <div className="relative group">
-        <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
-        <AnimatePresence mode="popLayout">
-          <motion.span
-            key={value}
-            initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
-            animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-            exit={{ y: -20, opacity: 0, filter: 'blur(10px)' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="text-5xl md:text-7xl font-bold font-outfit ks-gold-text block tabular-nums"
-          >
-            {value.toString().padStart(2, '0')}
-          </motion.span>
-        </AnimatePresence>
+  const TimeUnit = ({ value, label }) => {
+    const digits = value.toString().padStart(2, '0').split('');
+    
+    return (
+      <div className="flex flex-col items-center px-4 md:px-6">
+        <div className="relative group">
+          <div className="absolute inset-0 bg-rose-500/10 blur-2xl rounded-full scale-110 opacity-60 pointer-events-none" />
+          <div className="text-6xl md:text-8xl font-black font-outfit text-white flex items-center tracking-tighter drop-shadow-[0_0_20px_rgba(251,113,133,0.3)]">
+             {digits.map((d, i) => (
+                <Digit key={i} value={d} />
+             ))}
+          </div>
+        </div>
+        <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-white/20 mt-4 italic">
+          {label}
+        </span>
       </div>
-      <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-text-muted mt-2">
-        {label}
-      </span>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       <TimeUnit value={timeLeft.days} label="Days" />
-      <div className="text-3xl md:text-5xl font-bold text-accent/30 self-start mt-2">:</div>
-      <TimeUnit value={timeLeft.hours} label="Hours" />
-      <div className="text-3xl md:text-5xl font-bold text-accent/30 self-start mt-2">:</div>
-      <TimeUnit value={timeLeft.minutes} label="Minutes" />
-      <div className="text-3xl md:text-5xl font-bold text-accent/30 self-start mt-2">:</div>
-      <TimeUnit value={timeLeft.seconds} label="Seconds" />
+      <div className="text-3xl md:text-5xl font-black text-rose-500/20 self-start mt-4 select-none">:</div>
+      <TimeUnit value={timeLeft.hours} label="Hrs" />
+      <div className="text-3xl md:text-5xl font-black text-rose-500/20 self-start mt-4 select-none">:</div>
+      <TimeUnit value={timeLeft.minutes} label="Min" />
+      <div className="text-3xl md:text-5xl font-black text-rose-500/20 self-start mt-4 select-none">:</div>
+      <TimeUnit value={timeLeft.seconds} label="Sec" />
     </div>
   );
 };
