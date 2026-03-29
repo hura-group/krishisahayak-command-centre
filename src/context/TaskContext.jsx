@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { SCHEDULE_DATA, getCurrentDayNumber, WEEK_THEMES } from '../data/scheduleData';

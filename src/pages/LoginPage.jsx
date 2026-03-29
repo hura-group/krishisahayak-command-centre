@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Lock, User, Heart, ShieldCheck, ArrowRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import HeartParticles from '../components/HeartParticles';
 import AuthSuccessAnimation from '../components/AuthSuccessAnimation';
 import HeartEffect from '../components/HeartEffect';
@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isComingSoon, setIsComingSoon] = useState(true);
-  const [secretClickCount, setSecretClickCount] = useState(0);
+  const [, setSecretClickCount] = useState(0);
   const { login } = useAuth();
   const navigate = useNavigate();
 

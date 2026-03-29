@@ -34,6 +34,7 @@ const CountdownTimer = ({ targetDate, onComplete }) => {
     }, 1000);
 
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetDate]);
 
   const TimeUnit = ({ value, label }) => (

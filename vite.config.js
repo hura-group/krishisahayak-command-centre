@@ -12,7 +12,7 @@ export default defineConfig({
     'process.env': {}, // Polyfill for libraries that expect process.env
   },
   build: {
-    chunkSizeWarningLimit: 2000, // Increase threshold for large 3D/Animation libraries
+    chunkSizeWarningLimit: 10000, // Increase threshold for large 3D/Animation libraries
     rollupOptions: {
       output: {
         manualChunks(id) {

@@ -1,0 +1,25 @@
+﻿
+> schedule@0.0.0 lint
+> eslint .
+
+
+D:\NEW folder\New folder\anti\schedule\src\components\CountdownTimer.jsx
+  37:6  warning  React Hook useEffect has missing dependencies: 'calculateTimeLeft' and 'onComplete'. Either include them or remove the dependency array. If 'onComplete' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+D:\NEW folder\New folder\anti\schedule\src\components\Header.jsx
+  7:19  error  'logout' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]|^motion$/u  no-unused-vars
+
+D:\NEW folder\New folder\anti\schedule\src\components\SplineBackground.jsx
+  9:35  error  'error' is defined but never used  no-unused-vars
+
+D:\NEW folder\New folder\anti\schedule\src\context\AuthContext.jsx
+  6:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\NEW folder\New folder\anti\schedule\src\context\TaskContext.jsx
+  7:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\NEW folder\New folder\anti\schedule\src\pages\LoginPage.jsx
+  66:5  error  'setSecretClickCount' is not defined  no-undef
+
+Ô£û 6 problems (3 errors, 3 warnings)
+

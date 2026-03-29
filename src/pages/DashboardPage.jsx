@@ -29,7 +29,7 @@ function StatusBadge({ status, onChange }) {
 }
 
 function IntelTicker() {
-  const { fullSchedule, getMemberStats, getMemberAchievements } = useTasks();
+  const { fullSchedule, getMemberAchievements } = useTasks();
   const { member } = useAuth();
   
   const updates = useMemo(() => {
@@ -89,7 +89,6 @@ export default function DashboardPage() {
     getMemberStats, 
     getMemberAchievements,
     lastSync,
-    isSyncing,
     performSync 
   } = useTasks();
   const [loading, setLoading] = React.useState(true);

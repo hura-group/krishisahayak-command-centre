@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { ShieldCheck, LogOut, Clock, Heart } from 'lucide-react';
 
 export default function Header() {
-  const { member, logout, setIsConfirmingLogout } = useAuth();
+  const { member, setIsConfirmingLogout } = useAuth();
   const location = useLocation();
   const [currentTime, setCurrentTime] = useState(new Date());
 
